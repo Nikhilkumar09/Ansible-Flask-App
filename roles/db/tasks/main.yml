@@ -1,0 +1,40 @@
+---
+    - name: Install Python
+      ansible.builtin.dnf:
+        name: 
+         - python3
+         - python3-pip
+           #       - python3-venv
+        state: present
+
+    - name: Install Mysql
+      ansible.builtin.dnf:
+        name: 
+         - mysql8.4-server 
+         - mysql8.4
+         - python3-PyMySQL
+        state: present
+
+    - name: Start Mysql service
+      ansible.builtin.service:
+        name: mysqld
+        state: started
+        enabled: yes
+
+    - name: Create a database for the application
+      community.mysql.mysql_db:
+        name: employee_db
+        state: present
+        login_unix_socket: /var/lib/mysql/mysql.sock
+
+    - name: Create database user with name 'db_user' and password '*****' with all database privileges
+      community.mysql.mysql_user:
+        name: "{{ db_user_name }}"
+        plugin_auth_string: "{{ db_user_password }}"
+        priv: '*.*:ALL'
+        host: '%'
+        state: present
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        plugin: caching_sha2_password
+
+

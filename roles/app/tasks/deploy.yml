@@ -1,0 +1,22 @@
+---
+- name: Clone Flask app py code from GitHub repository
+  ansible.builtin.git:
+    repo: 'https://github.com/Nikhilkumar09/simple_web_application'
+    dest: /opt/simple_web_application
+    version: master
+    force: yes
+
+#- name: Run the Flask application
+#  ansible.builtin.shell: export FLASK_APP=/opt/simple_web_application/app.py && nohup flask run --host=0.0.0.0 &
+
+
+- name: Kill the flask process if running
+  ansible.builtin.shell: pkill -f "/usr/local/bin/flask run" 
+  ignore_errors: true
+
+- name: Run the Flask application
+  ansible.builtin.shell: >
+    export MYSQL_DATABASE_HOST="{{hostvars[groups['Server_DBSERVER'][0]]['private_ip_address']}}" &&
+    export FLASK_APP=/opt/simple_web_application/app.py &&
+    nohup /usr/local/bin/flask run --host=0.0.0.0 &
+

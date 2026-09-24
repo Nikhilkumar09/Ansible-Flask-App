@@ -1,0 +1,17 @@
+
+
+- name: Flask Database
+  hosts: Server_DBSERVER
+  become: yes
+  roles:
+    - db
+
+
+- name: Flask Application
+  hosts: Server_Quality
+  become: yes
+  roles:
+    - app
+
+
+
