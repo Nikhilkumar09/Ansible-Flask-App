@@ -1,5 +1,3 @@
-
-
 - name: Flask Database
   hosts: Server_DBSERVER
   become: yes
